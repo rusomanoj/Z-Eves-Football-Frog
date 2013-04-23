@@ -1,0 +1,119 @@
+\begin{axdef}
+  maxGoalkeeperSubs: \nat \\
+  maxPlayerSubs: \nat 
+\where
+  maxGoalkeeperSubs = 1\\
+  maxPlayerSubs = 2
+\end{axdef}
+
+\begin{axdef}
+  Player: \power  \nat 
+\where
+  Player = 1 \upto 99
+\end{axdef}
+
+\begin{schema}{RefBook}
+  team: \finset  Player\\
+  players: \finset  Player\\
+  substitutes: \finset  Player\\
+  redcards: \finset  Player\\
+  goalkeeper: \finset  Player\\
+  goalkeeperSubs: \nat \\
+  playerSubs: \nat \\
+ % out: \finset Player\\
+\where
+  team = players \cup  substitutes \\%\cup redcards\\
+  \# team \leq  16\\
+ %  \# players \geq 7\\
+   \# players \leq 11\\
+ % 7 \leq \# players \leq 11\\
+  goalkeeper \subseteq  players\\
+  goalkeeperSubs \leq  maxGoalkeeperSubs\\
+  playerSubs \leq  maxPlayerSubs
+\end{schema}
+
+\begin{schema}{Init}
+ RefBook'
+\where
+%team' = 1 \upto 16\\
+players' = 1 \upto 11\\
+substitutes' = 12 \upto 16\\
+redcards' = \emptyset\\
+goalkeeper' = \{1\}\\
+goalkeeperSubs' = 0\\
+playerSubs' = 0\\
+%out' = \emptyset\\
+\end{schema}
+
+\begin{schema}{Redcard\_Player}
+  \Delta RefBook\\
+   p?: Player
+\where
+   p? \in team\\
+  \#team \leq 16\\
+  team' = team \setminus \{p? \}\\ 
+   redcards' = redcards \cup \{p? \}\\
+ % players  = 1 \upto 6\\
+ % substitutes' = 12 \upto 16\\
+   players' = players \setminus \{p? \}\\
+   substitutes' = substitutes \setminus \{p? \}\\ 
+   goalkeeper'=goalkeeper \setminus \{p? \}\\
+   goalkeeperSubs' = goalkeeperSubs\\
+   playerSubs' = playerSubs\\
+ %  out' = \emptyset\\
+\end{schema}
+
+\begin{schema}{Change\_Goalkeeper}
+  \Delta RefBook\\
+   new?: Player
+\where
+   new? \in (players \cup goalkeeper) \\
+   team' = team \\
+   redcards' = redcards \\
+   players' = players \\
+   substitutes' = substitutes \\
+   goalkeeper' = \{ new? \}\\
+   goalkeeperSubs' = goalkeeperSubs\\
+   playerSubs' = playerSubs\\
+   %out' = \emptyset\\
+\end{schema}
+
+\begin{schema}{Substitute\_Player}
+  \Delta RefBook\\
+   new?: Player \\
+   old?: Player
+\where
+   new? \in substitutes\\
+   old? \in players \\
+   old? \notin goalkeeper\\
+   team' = team \setminus \{old? \}\\
+   redcards' = redcards\\
+   players' = players \setminus \{old? \} \cup \{new? \}\\
+   substitutes' = substitutes \setminus \{new? \}\\ 
+   goalkeeper' = goalkeeper\\
+   playerSubs < maxPlayerSubs\\
+   goalkeeperSubs' = goalkeeperSubs\\
+   playerSubs' =  playerSubs + 1\\
+ % out' = out \cup \{old? \}\\
+\end{schema} 
+
+\begin{schema}{Substitute\_Goalkeeper}
+  \Delta RefBook\\
+   new?: Player \\
+   old?: Player
+\where
+  new? \in substitutes \\
+  old? \in players \\
+  old? \in goalkeeper \\
+    team' = team \setminus \{old? \}\\
+    redcards' = redcards\\
+   players' = players \setminus \{old? \} \\\cup \{new? \}\\
+   substitutes' = substitutes \setminus \{old? \}\\ 
+ %  substitutes' = substitutes \\
+   goalkeeper' = goalkeeper \setminus \{old? \} \cup \{new? \} \\
+   goalkeeperSubs < maxGoalkeeperSubs\\
+   goalkeeperSubs' = goalkeeperSubs + 1   \\
+   playerSubs' =  playerSubs \\
+ % out' = out \cup \{old? \}\\
+\end{schema} 
+
