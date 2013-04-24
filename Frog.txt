@@ -1,0 +1,50 @@
+
+POSITION : PN 
+POSITION = 1..7 
+
+
+FrogState 
+females : F POSITION 
+empty : F POSITION 
+males : F POSITION 
+#females = 3 
+#empty = 1 
+#males = 3 
+females ∩ males =∅ 
+males ∩ empty ∩ females = ∅ 
+
+
+Init 
+FrogState' 
+females' = 1..3 
+empty' = {4} 
+males' =5..7
+ 
+
+Move Right 
+ΔFrogState 
+n? : POSITION 
+o? : POSITION 
+n? ∈ empty 
+o? ∈ females 
+n? ≤ o? + 2 
+n? > o? 
+females' = females \ {o?} ∪ {n?} 
+empty' = empty \ {n?} ∪ {o?} 
+males' = males
+ 
+
+Move Left 
+ΔFrogState 
+n? : POSITION 
+o? : POSITION 
+n? ∈ empty 
+o? ∈ males 
+n? ≥ o? - 2 
+n? < o? 
+females' = females 
+empty' = empty \ {n?} ∪ {o?}
+males' = males \ {o?} ∪ {n?} 
+
+
+
